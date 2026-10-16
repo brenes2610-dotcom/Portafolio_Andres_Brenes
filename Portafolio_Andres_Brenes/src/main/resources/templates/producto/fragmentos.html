@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<!--
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this template
+-->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8"/>
+        <title>Categorías</title>
+    </head>
+    <body>
+
+        <!-- fragmento 1: botón y ventana modal para agregar (se activa en la semana 4) -->
+       <section th:fragment="agregar" class="py-3">
+            <div class="container">
+                <button type="button" class="btn btn-primary"
+                        data-bs-toggle="modal" data-bs-target="#productoAgregar">
+                    <i class="fa-solid fa-plus"></i> [[#{producto.agregar}]]
+                </button>
+            </div>
+
+            <div class="modal fade" id="productoAgregar" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <form th:action="@{/producto/guardar}" method="post">
+                            <div class="modal-header bg-info text-white">
+                                <h5 class="modal-title">[[#{producto.agregar}]]</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="mb-3">
+                                    <label class="form-label">[[#{producto.descripcion}]]</label>
+                                    <input type="text" name="descripcion" class="form-control"
+                                           maxlength="50" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">[[#{producto.detalle}]]</label>
+                                    <textarea name="detalle" class="form-control" rows="3"></textarea>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">[[#{producto.categoria}]]</label>
+                                    <select name="idCategoria" class="form-select" required>
+                                        <option th:each="c : ${categorias}"
+                                                th:value="${c.idCategoria}"
+                                                th:text="${c.descripcion}"></option>
+                                    </select>
+                                </div>
+                                <div class="row">
+                                    <div class="col-6 mb-3">
+                                        <label class="form-label">[[#{producto.precio}]]</label>
+                                        <input type="number" name="precio" class="form-control"
+                                               step="0.01" min="0.01" required>
+                                    </div>
+                                    <div class="col-6 mb-3">
+                                        <label class="form-label">[[#{producto.existencias}]]</label>
+                                        <input type="number" name="existencias" class="form-control"
+                                               min="0" required>
+                                    </div>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox"
+                                           name="activo" value="true" id="productoActivo" checked>
+                                    <label class="form-check-label" for="productoActivo">
+                                        [[#{producto.activo}]]
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                    <i class="fa-solid fa-xmark"></i> [[#{accion.cerrar}]]
+                                </button>
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fa-solid fa-floppy-disk"></i> [[#{accion.guardar}]]
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- fragmento 2: listado de categorías -->
+        <section th:fragment="listado" class="p-3">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-9">
+                        <div class="card">
+                            <div class="card-header bg-info text-white">
+                                <h4>[[#{producto.listado}]]</h4>
+                            </div>
+                            <div th:if="${productos != null and !productos.empty}">
+                                <table class="table table-striped table-hover mb-0">
+                                    <thead class="table-dark">
+                                        <tr>                                            
+                                            <th>#</th>
+                                            <th>[[#{producto.descripcion}]]</th>
+                                            <th>[[#{producto.precio}]]</th>
+                                            <th>[[#{producto.existencias}]]</th>
+                                            <th>[[#{producto.activo}]]</th>
+                                            <th></th>
+                                        </tr>                                           
+                                    </thead>
+                                    <tbody>
+                                        <tr th:each="c : ${productos}">
+                                            <td>[[${c.idProducto}]]</td>
+                                            <td>[[${c.descripcion}]]</td>
+                                            <td th:text="'$' + ${#numbers.formatDecimal(c.precio, 1, 'COMMA', 2, 'POINT')}"></td>
+                                            <td>[[${c.existencias}]]</td>
+                                            <td>
+                                                <i th:class="${c.activo} ? 'fa-solid fa-circle-check text-success' : 'fa-solid fa-circle-xmark text-danger'"></i>
+                                            </td>
+                                            <td>
+                                                <div class="d-flex gap-1">
+                                                    <a th:href="@{/producto/modifica/{id}(id=${c.idProducto})}"
+                                                       class="btn btn-sm btn-outline-primary">
+                                                        <i class="fa-solid fa-pen"></i>
+                                                    </a>
+                                                    <form th:action="@{/producto/eliminar}" method="post"
+                                                          onsubmit="return confirm('¿Seguro que querés eliminar este producto?')">
+                                                        <input type="hidden" name="idProducto" th:value="${c.idProducto}"/>
+                                                        <button type="submit" class="btn btn-sm btn-outline-danger">
+                                                            <i class="fa-solid fa-trash"></i>
+                                                        </button>
+                                                    </form>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="p-3" th:if="${productos == null or productos.empty}">
+                                [[#{producto.vacio}]]
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card text-center bg-success text-white">
+                            <div class="card-body">
+                                <h5>[[#{producto.total}]]</h5>
+                                <h2>[[${totalProductos}]]</h2>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- fragmentos 3 y 4: se completan en la semana 4 -->
+        <section th:fragment="editar"></section>
+        <section th:fragment="confirmarEliminar"></section>
+
+    </body>
+</html>

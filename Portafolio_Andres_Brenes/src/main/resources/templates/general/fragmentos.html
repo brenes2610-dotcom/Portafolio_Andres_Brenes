@@ -23,6 +23,7 @@
                     <li class="nav-item px-2"><a class="nav-link" th:href="@{/multimedia}">[[#{menu.multimedia}]]</a></li>
                     <li class="nav-item px-2"><a class="nav-link" th:href="@{/iframes}">[[#{menu.iframes}]]</a></li>
                     <li class="nav-item px-2"><a class="nav-link" th:href="@{/categoria/listado}">[[#{menu.categorias}]]</a></li>
+                    <li class="nav-item px-2"><a class="nav-link" th:href="@{/producto/listado}">[[#{menu.productos}]]</a></li>
                 </ul>
                 <ul class="navbar-nav">
                     <li class="nav-item dropdown">
@@ -49,3 +50,23 @@
 <footer th:fragment="footer" class="p-2 mt-5 bg-info text-white">
     <p class="lead text-center">[[#{pie.derechos}]] &copy;</p>
 </footer>
+<!-- Fragmento: mensajes tipo toast -->
+    <div th:fragment="mostrarToast" class="toast-container position-fixed top-0 end-0 p-3">
+        <div th:if="${todoOk != null}" class="toast align-items-center text-bg-success border-0" role="alert">
+            <div class="d-flex">
+                <div class="toast-body">[[${todoOk}]]</div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+            </div>
+        </div>
+        <div th:if="${error != null}" class="toast align-items-center text-bg-danger border-0" role="alert">
+            <div class="d-flex">
+                <div class="toast-body">[[${error}]]</div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+            </div>
+        </div>
+        <script>
+            document.querySelectorAll('.toast').forEach(function (t) {
+                new bootstrap.Toast(t, {delay: 4000}).show();
+            });
+        </script>
+    </div>
