@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <body>
+
+        <!-- Fragmento 1: pestañas de categorías -->
+        <section th:fragment="tabs" class="py-3">
+            <ul class="nav nav-underline justify-content-center">
+                <li class="nav-item">
+                    <a th:href="@{/}" class="nav-link"
+                       th:classappend="${idCategoriaActual == null} ? 'active'">
+                        [[#{consultas.todas}]]
+                    </a>
+                </li>
+                <li th:each="c : ${categorias}" class="nav-item">
+                    <a class="nav-link"
+                       th:href="@{/consultas/{id}(id=${c.idCategoria})}"
+                       th:classappend="${idCategoriaActual != null and idCategoriaActual.equals(c.idCategoria)} ? 'active'"
+                       th:text="${c.descripcion}"></a>
+                </li>
+            </ul>
+        </section>
+
+        <!-- Fragmento 2: tarjetas de productos -->
+        <section th:fragment="tarjetas" class="container py-4">
+            <p th:if="${productos == null or productos.empty}" class="text-center text-muted">
+                [[#{consultas.vacio}]]
+            </p>
+            <div class="row row-cols-1 row-cols-md-3 g-4">
+                <div th:each="p : ${productos}" class="col">
+                    <article class="card h-100 shadow-sm">
+                        <img th:if="${p.rutaImagen != null}"
+                             th:src="${p.rutaImagen}" th:alt="${p.descripcion}"
+                             class="card-img-top"
+                             style="height:200px; object-fit:contain">
+                        <div th:if="${p.rutaImagen == null}"
+                             class="text-center text-secondary py-5 bg-light">
+                            <i class="fa-solid fa-microchip fa-4x"></i>
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title" th:text="${p.descripcion}"></h5>
+                            <p class="card-text" th:text="${p.detalle}"></p>
+                            <strong th:text="'$' + ${#numbers.formatDecimal(p.precio, 1, 'COMMA', 2, 'POINT')}"></strong>
+                            <p class="mb-0 text-muted">
+                                [[#{producto.existencias}]]: [[${p.existencias}]]
+                            </p>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+    </body>
+</html>

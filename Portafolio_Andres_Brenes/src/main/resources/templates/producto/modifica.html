@@ -26,12 +26,12 @@
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">[[#{producto.categoria}]]</label>
-                                <select name="idCategoria" class="form-select" required>
-                                    <option th:each="c : ${categorias}"
-                                            th:value="${c.idCategoria}"
-                                            th:text="${c.descripcion}"
-                                            th:selected="${c.idCategoria == producto.idCategoria}"></option>
-                                </select>
+                           <select name="categoria.idCategoria" class="form-select" required>
+                                <option th:each="c : ${categorias}"
+                                        th:value="${c.idCategoria}"
+                                        th:text="${c.descripcion}"
+                                        th:selected="${c.idCategoria == producto.categoria.idCategoria}"></option>
+                            </select>
                             </div>
                             <div class="row">
                                 <div class="col-6 mb-3">

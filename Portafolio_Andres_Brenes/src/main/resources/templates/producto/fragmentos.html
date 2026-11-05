@@ -40,7 +40,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label">[[#{producto.categoria}]]</label>
-                                    <select name="idCategoria" class="form-select" required>
+                                    <select name="categoria.idCategoria" class="form-select" required>
                                         <option th:each="c : ${categorias}"
                                                 th:value="${c.idCategoria}"
                                                 th:text="${c.descripcion}"></option>

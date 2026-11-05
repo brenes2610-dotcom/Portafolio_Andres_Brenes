@@ -6,6 +6,7 @@ package Portafolio_Andres_Brenes.Portafolio.service;
 import Portafolio_Andres_Brenes.Portafolio.domain.Categoria;
 import Portafolio_Andres_Brenes.Portafolio.repository.CategoriaRepository;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;    
 /**
@@ -26,5 +27,10 @@ public class CategoriaService {
             return categoriaRepository.findByActivoTrue();
         }
         return categoriaRepository.findAll();
-    } 
+    }
+    @Transactional(readOnly = true)
+    public Optional<Categoria> getCategoria(Integer idCategoria) {
+        return categoriaRepository.findById(idCategoria);
+}
+    
 }
