@@ -28,13 +28,13 @@
             <div class="row row-cols-1 row-cols-md-3 g-4">
                 <div th:each="p : ${productos}" class="col">
                     <article class="card h-100 shadow-sm">
-                        <img th:if="${p.rutaImagen != null}"
+                        <img th:if="${!#strings.isEmpty(p.rutaImagen)}"
                              th:src="${p.rutaImagen}" th:alt="${p.descripcion}"
                              class="card-img-top"
                              style="height:200px; object-fit:contain">
                         <div th:if="${p.rutaImagen == null}"
                              class="text-center text-secondary py-5 bg-light">
-                            <i class="fa-solid fa-microchip fa-4x"></i>
+                            <div th:if="${#strings.isEmpty(p.rutaImagen)}"
                         </div>
                         <div class="card-body">
                             <h5 class="card-title" th:text="${p.descripcion}"></h5>
@@ -48,6 +48,34 @@
                 </div>
             </div>
         </section>
-
+        <section th:fragment="buscar" class="container py-3">
+            <div class="card">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0">[[#{consultas.buscar.titulo}]]</h5>
+                </div>
+                <form th:action="@{/consultas/buscar}" method="post" class="card-body">
+                    <div class="row g-3 align-items-end">
+                        <div class="col-md-5">
+                            <label class="form-label">[[#{consultas.palabra}]]</label>
+                            <input type="text" name="texto" class="form-control"
+                                   th:value="${texto}" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">[[#{consultas.existenciasMinimas}]]</label>
+                            <input type="number" name="existenciasMinimas" class="form-control"
+                                   min="0" th:value="${existenciasMinimas != null ? existenciasMinimas : 0}" required>
+                        </div>
+                        <div class="col-md-3">
+                            <button type="submit" class="btn btn-primary w-100">
+                                <i class="fa-solid fa-magnifying-glass"></i> [[#{consultas.boton}]]
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <p th:if="${busquedaRealizada}" class="mt-3 text-muted">
+                [[#{consultas.resultado}]]: [[${#lists.size(productos)}]]
+            </p>
+        </section>
     </body>
 </html>

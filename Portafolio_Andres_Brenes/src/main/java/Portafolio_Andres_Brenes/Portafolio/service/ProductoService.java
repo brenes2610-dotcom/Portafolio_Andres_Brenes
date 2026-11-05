@@ -52,4 +52,11 @@ public class ProductoService {
             throw new IllegalStateException("No se puede eliminar el producto", e);
         }
     }
+    @Transactional(readOnly = true)
+    public List<Producto> buscarPorPalabraYStock(String texto, Integer existenciasMinimas) {
+        return productoRepository
+                .findByDescripcionContainingIgnoreCaseAndExistenciasGreaterThanOrderByPrecioAsc(
+                        texto, existenciasMinimas);
+    }
+    
 }

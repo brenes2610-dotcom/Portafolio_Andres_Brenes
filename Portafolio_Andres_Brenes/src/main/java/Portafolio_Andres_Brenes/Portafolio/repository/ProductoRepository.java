@@ -16,4 +16,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ProductoRepository extends JpaRepository<Producto, Integer>{
     public List<Producto> findByActivoTrue();
+    
+    List<Producto> findByDescripcionContainingIgnoreCaseAndExistenciasGreaterThanOrderByPrecioAsc(
+            String texto, Integer existenciasMinimas);
 }
